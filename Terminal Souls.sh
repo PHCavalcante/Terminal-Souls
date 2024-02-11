@@ -1,6 +1,15 @@
 #!/bin/bash
 
-getting_monsters () {
+if ! command -v play &> /dev/null; then
+    echo "'sox' and 'play' are not installed. please, intall them."
+    sleep 5
+fi
+
+if ! command -v mpg321 &> /dev/null; then
+    echo "mpg321 is not installed. please, install them."
+fi
+
+randomizing_monsters () {
 	monsters= $(($RANDOM % 4))  
 	case $monsters in
 		1)
