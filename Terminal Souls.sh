@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function getting_monsters {
+getting_monsters () {
 	monsters= $(($RANDOM % 4))  
 	case $monsters in
 		1)
@@ -29,7 +29,9 @@ function getting_monsters {
 
 echo "Hello adventurer! Welcome to Terminal Souls!"
 sleep 2
-echo "Please select your class:
+
+main_menu(){
+	echo "Please select your class:
 (1) - Beserker
 (2) - Archer
 (3) - Magician
@@ -97,28 +99,53 @@ case $class in
 		speed=10
 		magic=1
 esac
+}
 
-function battling {
+main_menu
+
+sleep 2
+
+echo "Are you sure you want to be an $type (y/n)?"
+read confirm
+clear
+sleep 2
+if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
+	echo "Your choice is $type, very well..."
+	sleep 1
+	echo "This is your stats:"
+	echo "HP: $hp"
+	echo "Attack: $attack"
+	echo "Defense: $defense"
+	echo "Speed: $speed"
+	echo "Magic: $magic"
+	sleep 5
+else
+	main_menu
+fi
+
+battling () {
 	while true
 	do
 		getting_monsters
 		echo "You are fighting a $name."
 		echo "||Your Hp: $hp||   ||$name Hp: $lp||"
-		echo  -n "What do you want to do? (Attack/Defend/Magic): "
+		echo "What do you want to do? (Attack/Defend/Magic): "
 		read action
 		case $action in
 			Attack)
-				damage=$(($RANDOM%(attack-defense+1)+1))
+				damage=$((RANDOM%(attack-defense+1)+1))
 				echo "You did $damage points of damage in $name!"
-				lp=$(($lp-$damage))
+				lp=$((lp-damage))
 				if [ $lp -le 0 ]
 				then
 					echo "Congratulations! You have defeated $name the enemy!"
 					exit
+				else
+					battling
 				fi
 				;;
 			Defend)
-				hp=$(($RANDOM%($m_attack - $defense)))
+				hp=$((RANDOM%($m_attack - $defense)))
 				echo "You defended but losed  $hp hp."
 				echo "||Your Hp: $hp||   ||$name Hp: $lp||"
 				sleep 2
@@ -127,22 +154,68 @@ function battling {
 			Magic)
 				dmg=$((RANDOM % (magic + 1)))
 				echo "You used magic and dealt $dmg points of damage in $name"
-				$lp=($lp - $dmg)
-				if [ lp -le 0]
+				lp=$((lp-dmg))
+				if [ $lp -le 0]
 				then
 					echo "The magic was too powerful for $name and killed it."
-				fi
+					break
 				else
 					echo "But $name still has $lp HP left."
+					battling
 				fi
+				;;
+			*)
+				echo "Invalid action. Please try again."
+				sleep 2
+				battling
+				;;
+		esac
+	done
 }
 
 sleep 1
-
-echo "Your choice is $type, very well..."
+clear
 sleep 2
-echo "Your adventure starts... NOW!"
-sleep1
+echo "Your adventure starts now! The dragon is sleeping peacefully on a mountain top."
+read -n1 -r -p "Press space key to continue..." key
+
+sleep 2
+clear
+# Start the battle with player's first attack
+echo "It wakes up suddenly and looks at you with its red eyes."
+echo "Its breath can kill you instantly!"
+echo "What do you want to do?"
+echo "[A]Attack it with your sword"
+echo "[M]Use magic to defeat it"
+choice="$(printf '%.8s' "$(od -An -t u4 /dev/urandom | tr -d ' \n')")"
+case $choice in
+	[a]* ) att_or_mag=Attack; dmg=$(($RANDOM%5+3)); echo Attacked with a sword and dealt $dmg points.; break ;;
+	[m]* ) att_or_mag=Magic; magic=7; echo Used magic to cast a spell.; break ;;
+	*    ) echo Invalid input; exit 1 ;;
+esac
+
+hp=$((10+$RANDOM%6+1))
+echo "The dragon has $hp HP."
+
+# Begin the game loop
+while true ; do
+	if [[ $att_or_mag == Magic ]] ; then
+		dragon_turn
+	else
+		player_turn
+	fi
+
+	if [[ $hp -le 0 ]] ; then
+		echo You have been defeated by the dragon... Game over.
+		exit 0
+	fi
+
+	if [[ $dragon_hp -le 0 ]] ; then
+		echo "Congratulations! You have slain the dragon!"
+		break
+	fi
+done
+sleep 1
 echo "Loading ."
 sleep 1
 echo "Loading .."
