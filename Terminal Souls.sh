@@ -1,7 +1,34 @@
 #!/bin/bash
 
-echo "Hello adventurer! welcome to mini RPG!"
-sleep 1
+function getting_monsters {
+	monsters= $(($RANDOM % 4))  
+	case $monsters in
+		1)
+			name="Goblin"
+			lp=5
+			m_attack=2
+			m_defense=0
+			m_speed=4
+			;;
+		2)
+			name="Ogre"
+			lp=8
+			m_attack=3
+			m_defense=1
+			m_speed=6
+			;;
+		3)
+			name="Troll"
+			lp=12
+			m_attack=4
+			m_defense=2
+			m_speed=2
+			;;
+	esac
+}
+
+echo "Hello adventurer! Welcome to Terminal Souls!"
+sleep 2
 echo "Please select your class:
 (1) - Beserker
 (2) - Archer
@@ -71,6 +98,45 @@ case $class in
 		magic=1
 esac
 
+function battling {
+	while true
+	do
+		getting_monsters
+		echo "You are fighting a $name."
+		echo "||Your Hp: $hp||   ||$name Hp: $lp||"
+		echo  -n "What do you want to do? (Attack/Defend/Magic): "
+		read action
+		case $action in
+			Attack)
+				damage=$(($RANDOM%(attack-defense+1)+1))
+				echo "You did $damage points of damage in $name!"
+				lp=$(($lp-$damage))
+				if [ $lp -le 0 ]
+				then
+					echo "Congratulations! You have defeated $name the enemy!"
+					exit
+				fi
+				;;
+			Defend)
+				hp=$(($RANDOM%($m_attack - $defense)))
+				echo "You defended but losed  $hp hp."
+				echo "||Your Hp: $hp||   ||$name Hp: $lp||"
+				sleep 2
+				battling
+				;;
+			Magic)
+				dmg=$((RANDOM % (magic + 1)))
+				echo "You used magic and dealt $dmg points of damage in $name"
+				$lp=($lp - $dmg)
+				if [ lp -le 0]
+				then
+					echo "The magic was too powerful for $name and killed it."
+				fi
+				else
+					echo "But $name still has $lp HP left."
+				fi
+}
+
 sleep 1
 
 echo "Your choice is $type, very well..."
@@ -105,6 +171,3 @@ if [[ $dice == "x" ]]; then
 	result=$(( $RANDOM % 10 ))
 	echo $result
 fi 
-
-
-
