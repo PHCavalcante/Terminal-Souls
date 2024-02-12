@@ -1,12 +1,17 @@
 #!/bin/bash
 
-if ! command -v play &> /dev/null; then
-    echo "'sox' and 'play' are not installed. please, intall them."
+if ! command -v play &> /dev/null || [! command -v mpg321 &> /dev/null]; then
+    echo "'sox' and 'play' are not installed."
     sleep 5
-fi
-
-if ! command -v mpg321 &> /dev/null; then
-    echo "mpg321 is not installed. please, install them."
+    echo "mpg321 is not installed."
+	sleep 2
+	echo "Both  'sox' and 'mpg321' have been not found in your system."
+	echo "At least one of them are needed to play music in the game"
+	echo "Do you want to install them? (y/n)"
+	read confim
+	if [ "$confim" = 'y' ] || [ "$confim" = 'Y' ]; then
+        sudo apt-get install sox mpg321 -y
+	fi
 fi
 
 randomizing_monsters () {
@@ -35,6 +40,16 @@ randomizing_monsters () {
 			;;
 	esac
 }
+
+echo "
+████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗         ███████╗ ██████╗ ██╗   ██╗██╗     ███████╗
+╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██╔══██╗██║         ██╔════╝██╔═══██╗██║   ██║██║     ██╔════╝
+   ██║   █████╗  ██████╔╝██╔████╔██║██║██╔██╗ ██║███████║██║         ███████╗██║   ██║██║   ██║██║     ███████╗
+   ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██║██║╚██╗██║██╔══██║██║         ╚════██║██║   ██║██║   ██║██║     ╚════██║
+   ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║███████╗    ███████║╚██████╔╝╚██████╔╝███████╗███████║
+   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝    ╚══════╝ ╚═════╝  ╚═════╝ ╚══════╝╚══════╝
+                                                                                                               
+"
 
 echo "Hello adventurer! Welcome to Terminal Souls!"
 sleep 2
