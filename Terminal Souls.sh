@@ -2,7 +2,7 @@
 
 if ! command -v play &> /dev/null || [! command -v mpg321 &> /dev/null]; then
     echo "'sox' and 'play' are not installed."
-    sleep 5
+    sleep 3
     echo "mpg321 is not installed."
 	sleep 2
 	echo "Both  'sox' and 'mpg321' have been not found in your system."
@@ -13,7 +13,7 @@ if ! command -v play &> /dev/null || [! command -v mpg321 &> /dev/null]; then
         sudo apt-get install sox mpg321 -y
 	fi
 fi
-
+clear
 randomizing_monsters () {
 	monsters= $(($RANDOM % 4))  
 	case $monsters in
@@ -52,6 +52,35 @@ echo "
 "
 
 echo "Hello adventurer! Welcome to Terminal Souls!"
+sleep 2
+echo "Please choose an option:"
+sleep 1
+echo "1) Play!"
+echo "2) About!"
+echo "3) Quit!"
+read choice
+
+if [ "$choice" = '1' ]; then
+	clear
+elif [ "$choice" = '2' ]; then
+	clear
+	if [$OSTYPE == "linux-gnu"]; then
+		xdg-open https://github.com/PHCavalcante/Terminal-Souls
+	elif [$OSTYPE == "darwin10.5.0"]; then
+		open https://github.com/PHCavalcante/Terminal-Souls
+	elif [$OSTYPE == "msys"]; then
+		start https://github.com/PHCavalcante/Terminal-Souls
+	else 
+		echo "OS not recognized or suportted, sorry."
+	fi
+sleep 3
+clear
+else
+	clear
+	exit 1
+	fi
+
+
 sleep 2
 
 main_menu(){
