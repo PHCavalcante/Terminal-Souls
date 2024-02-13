@@ -41,6 +41,63 @@ randomizing_monsters () {
 	esac
 }
 
+random_chests() {
+  chest= $(($RANDOM % 2))
+  if [[ $chest == "1" ]]; then
+    echo "You just found a chest!"
+    echo "Do you want to open it? (y/n)"
+    read choice
+    if [[ $choice == "y" ]]; then
+      mimic= $(($RANDOM % 10))
+      if [[ $mimic == "1" ]]; then
+        echo "Oh no! it is a mimic!"
+		if [[ $hp <= 6]]; then
+        	echo "You Died!"
+			exit 1
+		else
+			hp=$(($hp - 3))
+			echo "He bitted you, but luckly you survuved!"
+			echo "You loosed 3 HP."
+		fi
+        sleep 3
+        exit 1
+      else
+        item= $(($RANDOM % 10))
+        case $item in
+          1)
+            name="Life Potion"
+            type="potion"
+            price=10
+            ;;
+          2)
+            name="Gold coin"
+            type="coin"
+            price=1
+            ;;
+          3)
+            name="Magical Sword"
+            type="weapon"
+            price=50
+            ;;
+          4)
+			name="Broken Sword"
+			type="weapon"
+			price=0
+			;;
+		  5)
+		  	name="Light Armor"
+			type="armor"
+			price=10
+			;;
+		  6)
+		  	name="Heavy Armor"
+			type="armor"
+			price=50
+			;;
+           
+		esac
+}
+main_menu(){
 echo "
 ████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗         ███████╗ ██████╗ ██╗   ██╗██╗     ███████╗
 ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██╔══██╗██║         ██╔════╝██╔═══██╗██║   ██║██║     ██╔════╝
@@ -51,39 +108,60 @@ echo "
                                                                                                                
 "
 
-echo "Hello adventurer! Welcome to Terminal Souls!"
+
+	echo "Hello adventurer! Welcome to Terminal Souls!"
+	sleep 2
+	echo "Please choose an option:"
+	sleep 1
+	echo "1) Play!"
+	echo "2) About!"
+	echo "3) Quit!"
+	read choice
+
+	if [ "$choice" = "1" ]; then
+		clear
+	elif [ "$choice" = "2" ]; then
+		echo "Redirecting..."
+		sleep 3
+		clear
+		if [ "$OSTYPE" == "linux-gnu"* ]; then
+			xdg-open https://github.com/PHCavalcante/Terminal-Souls
+			main_menu
+		elif [ "$OSTYPE" == "darwin10.5.0"* ]; then
+			open https://github.com/PHCavalcante/Terminal-Souls
+			main_menu
+		elif [ "$OSTYPE" == "msys" ]; then
+			start https://github.com/PHCavalcante/Terminal-Souls
+			main_menu
+		elif [ "$OSTYPE" == "win32" ]; then
+			start https://github.com/PHCavalcante/Terminal-Souls
+			main_menu
+		else 
+			echo "OS not recognized or suportted, sorry."
+			main_menu
+		fi
+	sleep 5
+	clear
+	else
+		clear
+		exit 1
+		fi
+}
+
+main_menu
+
 sleep 2
-echo "Please choose an option:"
-sleep 1
-echo "1) Play!"
-echo "2) About!"
-echo "3) Quit!"
-read choice
 
-if [ "$choice" = '1' ]; then
-	clear
-elif [ "$choice" = '2' ]; then
-	clear
-	if [$OSTYPE == "linux-gnu"]; then
-		xdg-open https://github.com/PHCavalcante/Terminal-Souls
-	elif [$OSTYPE == "darwin10.5.0"]; then
-		open https://github.com/PHCavalcante/Terminal-Souls
-	elif [$OSTYPE == "msys"]; then
-		start https://github.com/PHCavalcante/Terminal-Souls
-	else 
-		echo "OS not recognized or suportted, sorry."
-	fi
-sleep 3
-clear
-else
-	clear
-	exit 1
-	fi
+# some lore and beggining of journey
+echo "In the quiet village of Eldoria, nestled within the vast expanse of the Enchanted Forest, rumors spread like wildfire. Whispers of darkness creeping at the edges of the realm had reached even the most remote corners of the land. Tales of ancient evils awakening from their slumber stirred unease among the villagers.
 
+As dusk settled over Eldoria, a chilling howl pierced the tranquility of the night. The once lush and vibrant forest now seemed shrouded in an eerie mist, concealing secrets long forgotten. Fear gripped the hearts of the villagers as they gathered in the town square, their eyes filled with trepidation and uncertainty.
 
-sleep 2
+Amidst the crowd stood a figure cloaked in mystery, a wanderer whose arrival seemed destined by the hands of fate. With eyes as sharp as a falcon's and a demeanor veiled in determination, this stranger bore the mark of a hero. Whispers among the villagers spoke of prophecies foretelling the coming of one who would rise against the encroaching darkness, a hero destined to vanquish the shadows and restore peace to the realm.
 
-main_menu(){
+It is in this moment of darkness that the call of the hero echoes through the land, beckoning forth those brave enough to heed its summons. For in the heart of adversity lies the crucible of legends, where the fate of the realm hangs in the balance, waiting for a champion to emerge and embark on a quest of unparalleled peril and glory. And thus, the journey begins..."
+
+choosing_class(){
 	echo "Please select your class:
 (1) - Beserker
 (2) - Archer
@@ -138,7 +216,7 @@ case $class in
 		;;
 	6)
 		type="Summoner"
-		hp=7
+		hp=6
 		attack=5
 		defense=5
 		speed=6
@@ -154,7 +232,7 @@ case $class in
 esac
 }
 
-main_menu
+choosing_class
 
 sleep 2
 
