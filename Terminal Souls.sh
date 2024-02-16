@@ -124,6 +124,7 @@ case $class in
 		defense=6
 		speed=6
 		magic=1
+		weapon="Sword"
 		;;
 	2)
 		type="Archer"
@@ -132,6 +133,7 @@ case $class in
 		defense=5
 		speed=7
 		magic=1
+		weapon="Crossbow"
 		;;
 	3)
 		type="Magician"
@@ -140,6 +142,7 @@ case $class in
 		defense=4
 		speed=5
 		magic=10
+		weapon="Wand"
 		;;
 	4)
 		type="Weapon Master"
@@ -148,6 +151,7 @@ case $class in
 		defense=6
 		speed=6
 		magic=1
+		weapon="Dual Swords"
 		;;
 	5)
 		type="Dwarf"
@@ -156,6 +160,7 @@ case $class in
 		defense=6
 		speed=4
 		magic=1
+		weapon="Axe"
 		;;
 	6)
 		type="Summoner"
@@ -164,6 +169,7 @@ case $class in
 		defense=5
 		speed=6
 		magic=8
+		weapon="Summons wand"
 		;;
 	7)
 		type="Assasin"
@@ -172,6 +178,7 @@ case $class in
 		defense=4
 		speed=10
 		magic=1
+		weapon="Poison dagger"
 esac
 }
 
