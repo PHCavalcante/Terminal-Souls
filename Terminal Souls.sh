@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 if ! command -v play &> /dev/null || [! command -v mpg321 &> /dev/null]; then
     echo "'sox' and 'play' are not installed."
     sleep 3
@@ -41,62 +42,6 @@ randomizing_monsters () {
 	esac
 }
 
-random_chests() {
-  chest= $(($RANDOM % 2))
-  if [[ $chest == "1" ]]; then
-    echo "You just found a chest!"
-    echo "Do you want to open it? (y/n)"
-    read choice
-    if [[ $choice == "y" ]]; then
-      mimic= $(($RANDOM % 10))
-      if [[ $mimic == "1" ]]; then
-        echo "Oh no! it is a mimic!"
-		if [[ $hp <= 6]]; then
-        	echo "You Died!"
-			exit 1
-		else
-			hp=$(($hp - 3))
-			echo "He bitted you, but luckly you survuved!"
-			echo "You loosed 3 HP."
-		fi
-        sleep 3
-        exit 1
-      else
-        item= $(($RANDOM % 10))
-        case $item in
-          1)
-            name="Life Potion"
-            type="potion"
-            price=10
-            ;;
-          2)
-            name="Gold coin"
-            type="coin"
-            price=1
-            ;;
-          3)
-            name="Magical Sword"
-            type="weapon"
-            price=50
-            ;;
-          4)
-			name="Broken Sword"
-			type="weapon"
-			price=0
-			;;
-		  5)
-		  	name="Light Armor"
-			type="armor"
-			price=10
-			;;
-		  6)
-		  	name="Heavy Armor"
-			type="armor"
-			price=50
-			;;
-           
-		esac
-}
 main_menu(){
 echo "
 ████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗         ███████╗ ██████╗ ██╗   ██╗██╗     ███████╗
@@ -107,8 +52,6 @@ echo "
    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝    ╚══════╝ ╚═════╝  ╚═════╝ ╚══════╝╚══════╝
                                                                                                                
 "
-
-
 	echo "Hello adventurer! Welcome to Terminal Souls!"
 	sleep 2
 	echo "Please choose an option:"
@@ -254,6 +197,85 @@ else
 	main_menu
 fi
 
+random_chests(){
+  chest=$((RANDOM % 2))
+  if [[ $chest == "1" ]]; then
+    echo "You just found a chest!"
+    echo "Do you want to open it? (y/n)"
+    read choice
+    if [[ $choice == "y" ]]; then
+      mimic=$((RANDOM % 10))
+      if [[ $mimic == "1" ]]; then
+        echo "Oh no! it is a mimic!"
+        if [[ $hp -le 6 ]]; then
+          echo "You Died!"
+          exit 1
+        else
+          hp=$((hp - 3))
+          echo "He bitted you, but luckily you survived!"
+          echo "You lost 3 HP."
+        fi
+        sleep 3
+        exit 1
+      else
+        item=$((RANDOM % 10))
+        case $item in
+          1)
+            name="Life Potion"
+            type="potion"
+            price=10
+            ;;
+          2)
+            name="Gold coin"
+            type="coin"
+            price=1
+            ;;
+          3)
+            name="Magical Sword"
+            type="weapon"
+            price=50
+            ;;
+          4)
+            name="Broken Sword"
+            type="weapon"
+            price=0
+            ;;
+          5)
+            name="Light Armor"
+            type="armor"
+            price=10
+            ;;
+          6)
+            name="Heavy Armor"
+            type="armor"
+            price=50
+            ;;
+          7)
+            name="Shield"
+            type="armor"
+            price=20
+            ;;
+          8)
+            name="Ring of Strength"
+            type="accessory"
+            price=30
+            ;;
+          9)
+            name="Ring of Intelligence"
+            type="accessory"
+            price=30
+            ;;
+          0)
+            name="Ring of Speed"
+            type="accessory"
+            price=30
+            ;;
+        esac
+      fi
+    fi
+  fi
+}
+
 battling () {
 	while true
 	do
@@ -312,25 +334,79 @@ read -n1 -r -p "Press space key to continue..." key
 
 sleep 2
 clear
-# Start the battle with player's first attack
 echo "It wakes up suddenly and looks at you with its red eyes."
+sleep 1
 echo "Its breath can kill you instantly!"
+sleep 1
+echo "You can't run, your only option is fight!"
+sleep 1
 echo "What do you want to do?"
-echo "[A]Attack it with your sword"
-echo "[M]Use magic to defeat it"
-choice="$(printf '%.8s' "$(od -An -t u4 /dev/urandom | tr -d ' \n')")"
-case $choice in
-	[a]* ) att_or_mag=Attack; dmg=$(($RANDOM%5+3)); echo Attacked with a sword and dealt $dmg points.; break ;;
-	[m]* ) att_or_mag=Magic; magic=7; echo Used magic to cast a spell.; break ;;
-	*    ) echo Invalid input; exit 1 ;;
+echo "[A]Attack it with all your strenght"
+
+dmg=10
+if [[$choice == "a"]] || [[$choice == "A"]] then
+	$dragon_hp= $((dragon_hp - dmg))
+	echo "Attacked with a sword and dealt $dmg points."
+	
+dragon_hp=500
+player_hp=100
+
+dragon_turn(){
+	random= $(RANDOM % 4)
+	case $random in
+	1)	
+		echo "The dragon roars loudly and charges towards you!"
+		sleep 3
+		echo "With his deadly claws he  attacks you!"
+		sleep 1
+		echo "You try to escape, but he hits you directly"
+		player_hp=  $((player_hp - 25))
+		echo "Ouch! You lost 25 HP. Now you have $player_hp/100 HP left."
+		;;
+	2)
+		echo "The dragon stands still for a while, like it is charching somenting"
+		sleep 2
+		echo "You see that his chest is slowning turning red"
+		sleep 1
+		echo "You know well what this means"
+		sleep 1
+		echo "You starts to run imediatly  away from the monster"
+		sleep 1
+		echo "With his charge complete, he blasts a huge  fireball right at you!"
+		sleep 1
+		echo "Luckly it  doesn't hit you directly, but it still hurts a lot"
+		player_hp= $((player_hp - 25))
+		;;
+	3)
+		echo "The dragon looks around very confused"
+		sleep 2
+		echo "He seems to be looking for something or someone else"
+		sleep 1
+		echo "As soon as he turns around, he continues his attack"
+		dragon_turn
+		;;
 esac
+}
 
-hp=$((10+$RANDOM%6+1))
-echo "The dragon has $hp HP."
+player_turn(){
+	random= $(RANDOM % 4)
+	case $random in
 
-# Begin the game loop
+	1)
+		echo "You decide to fight back with your sword"
+		echo "You swing your sword at the dragons neck"
+		sleep 1
+		echo "But unfortunately you miss and hit the dragons shoulder instead"
+		sleep 1
+		dragon_hp= $((dragon_hp - 7))
+		echo "That was a glancing blow and only hurt him slightly"
+		;;
+	2)
+		echo "
+}
+
 while true ; do
-	if [[ $att_or_mag == Magic ]] ; then
+	if [[$choice == "a"]] || [[$choice == "A"]] then
 		dragon_turn
 	else
 		player_turn
