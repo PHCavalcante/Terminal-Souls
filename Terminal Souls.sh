@@ -409,7 +409,16 @@ player_turn(){
 		echo "That was a glancing blow and only hurt him slightly"
 		;;
 	2)
-		echo "
+		echo "With all your willpower you charges towards the dragon!"
+		echo "You hit hit right in his  face!"
+		sleep 1
+		echo "This time you manage to land a solid hit on his nose"
+		sleep 1
+		echo "You did 10 points of damage to the dragon!"
+		dragon_hp=$(($dragon_hp -  10))
+		;;
+	3)
+		
 }
 
 while true ; do
